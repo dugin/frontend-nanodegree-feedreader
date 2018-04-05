@@ -40,9 +40,9 @@ function init() {
  * feed using the Google Feed Reader API. It will then
  * perform all of the DOM operations required to display
  * feed entries on the page. Feeds are referenced by their
- * index position within the allFeeds array.
- * This function all supports a callback as the second parameter
- * which will be called after everything has run successfully.
+ * index position within the allFeeds array. When successful,
+ * it will return all entries as a promise.
+ *
  */
 function loadFeed(id) {
   var feedUrl = allFeeds[id].url,
@@ -76,7 +76,7 @@ function loadFeed(id) {
         resolve(entries);
       },
       error: function(result, status, err) {
-        //run only the callback without attempting to parse result due to error
+        //reject the promise with the given result
 
         reject(result);
       },

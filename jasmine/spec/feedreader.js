@@ -62,7 +62,7 @@ $(
               */
 
       it('is hidden by default', function() {
-        expect($('body').attr('class')).toEqual('menu-hidden');
+        expect($('body').hasClass('menu-hidden')).toBeTruthy();
       });
 
       /*  Write a test that ensures the menu changes
@@ -76,11 +76,11 @@ $(
 
         menuIcon.trigger('click');
 
-        expect($('body').attr('class')).toEqual('');
+        expect($('body').hasClass('menu-hidden')).toBeFalsy();
 
         menuIcon.trigger('click');
 
-        expect($('body').attr('class')).toEqual('menu-hidden');
+        expect($('body').hasClass('menu-hidden')).toBeTruthy();
       });
     });
 
@@ -103,7 +103,7 @@ $(
       });
 
       it('is not an empty array', function() {
-        expect($('.feed').children().length).not.toBe(0);
+        expect($('.feed .entry').length).not.toBe(0);
       });
     });
 
@@ -114,25 +114,24 @@ $(
                          * by the loadFeed function that the content actually changes.
                          * Remember, loadFeed() is asynchronous.
                          */
-      let initialEntryList, newEntryList;
+      let initialEntry, newEntry;
       beforeEach(function(done) {
         loadFeed(0)
-          .then(function(entries) {
-            initialEntryList = entries;
+          .then(function() {
+            initialEntry = $('.feed .entry:first-of-type h2').text();
 
-            const item = $('.feed-list li:nth-of-type(2) a');
-            item.trigger('click');
+            const FEED_INDEX = 2;
 
-            return loadFeed(item.data('id'));
+            return loadFeed(FEED_INDEX);
           })
-          .then(function(entries) {
-            newEntryList = entries;
+          .then(function() {
+            newEntry = $('.feed .entry:first-of-type h2').text();
             done();
           });
       });
 
       it('is not the same as the initial feed', function() {
-        expect(initialEntryList[0].title).not.toEqual(newEntryList[0].title);
+        expect(initialEntry).not.toEqual(newEntry);
       });
     });
   })()
